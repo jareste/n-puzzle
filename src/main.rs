@@ -1,20 +1,21 @@
-struct Map(i16, i16);
+mod parser;
 
-struct Parser {
-    map: Map,
-    size: char,
-}
 fn main() {
-    // a[5] = 0;
+    let filename = "test.txt";
 
-    let mut parser = Parser {
-        map: Map(5, 5),
-        size: 5 as char,
-    };
+    let mut parser: Option<parser::Parser> = None;
 
-    parser.map.0 = 10;
+    match parser::Parser::parse_file(filename) {
+        Ok(p) => {
+            parser = Some(p);
+        }
+        Err(error) => {
+            println!("Failed to parse file: {:?}", error);
+        }
+    }
 
-    println!("Parser.map.0: {}", parser.map.0);
-
-
+    if let Some(mut parser) = parser {
+        parser.map[0][0] = 10;
+        println!("Parser.map[0][0]: {}", parser.map[0][0]);
+    }
 }
