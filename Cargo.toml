@@ -1,5 +1,5 @@
 [package]
-name = "srcs1"
+name = "n-puzzle"
 version = "0.1.0"
 edition = "2021"
 
