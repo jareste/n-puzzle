@@ -14,6 +14,8 @@ fn main() {
             vec![3, 2, 6],
         ],
     };
+
+    // jareste
     let (file, method, heuristic) = check_args();
 
     let mut parser: Option<parser::Parser> = None;
@@ -31,6 +33,7 @@ fn main() {
         println!("parser.map:\n{:?}", parser.map);
     }
     // debug veure q parser existeix i printa algo
+    // jareste
 
     // idastar::idastar(map);
 
