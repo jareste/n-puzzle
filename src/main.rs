@@ -1,6 +1,9 @@
 mod idastar;
 mod map;
 use map::Map;
+mod parser;
+mod check_args;
+use check_args::check_args;
 
 fn main() {
     let map = Map {
@@ -11,5 +14,8 @@ fn main() {
             vec![3, 2, 6],
         ],
     };
+    check_args();
+
     idastar::idastar(map);
+
 }
