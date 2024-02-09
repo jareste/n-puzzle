@@ -27,27 +27,28 @@ fn get_file_contents(file: &str) -> String {
             exit(1);
         }
     };
+    // println!("contents: {}", contents);
     contents
 }
 
-pub fn check_args() {
-    let mut method: &str = "greedy";
-    let mut methodfound: bool = false;
-    let mut heuristic: &str = "manhattan";
-    let mut heuristicfound: bool = false;
+pub fn check_args() -> (String, String, String) {
     let mut file = String::new();
     let mut filefound: bool = false;
+    let mut method: String = "greedy".to_string();
+    let mut methodfound: bool = false;
+    let mut heuristic: String = "manhattan".to_string();
+    let mut heuristicfound: bool = false;
     let args: Vec<String> = env::args().collect();
     let mut i = 1;
-    println!("{:?}", args);
+    // println!("{:?}", args);
     // println!("{}", file);
     while i < args.len() {
-        println!("{}, {}, {}", args[i], i, args.len());
+        // println!("{}, {}, {}", args[i], i, args.len());
         if args[i] == "-f" || args[i] == "--file" {
             if i + 1 < args.len()  && filefound == false {
                 filefound = true;
                 file = get_file_contents(&args[i + 1]);
-                println!("file content: {}", file);
+                // println!("file content:\n{}", file);
             } else {
                 println!("File flag detected but no argument following it. Exiting.");
                 exit(1);
@@ -57,16 +58,16 @@ pub fn check_args() {
             if i + 1 < args.len() && filefound == false  && args[i + 1].parse::<i8>().is_ok() {
                 file = run_python_program(&args[i + 1]);
                 filefound = true;
-                println!("Python output: {}", file);
+                // println!("Python output:\n{}", file);
             } else {
                 println!("File flag detected but no integer argument following it. Exiting.");
                 exit(1);
             }
         }
-        else if (args[i] == "-he" || args[i] == "--heuristic"){
+        else if args[i] == "-he" || args[i] == "--heuristic" {
             if i + 1 < args.len() && heuristicfound == false && (args[i + 1] == "manhattan" || args[i + 1] == "hamming" || args[i + 1] == "euclidean") {
                 heuristicfound = true;
-                heuristic = &args[i + 1];
+                heuristic = args[i + 1].clone();
             } else {
                 println!("File flag detected but no argument following it. Exiting.");
                 exit(1);
@@ -75,7 +76,7 @@ pub fn check_args() {
         else if args[i] == "-m" || args[i] == "--method" && (args[i + 1] == "greedy" || args[i + 1] == "uniform") {
             if i + 1 < args.len() && methodfound == false {
                 methodfound = true;
-                method = &args[i + 1];
+                method = args[i + 1].clone();
             } else {
                 println!("File flag detected but no argument following it. Exiting.");
                 exit(1);
@@ -99,5 +100,6 @@ pub fn check_args() {
         println!("No arguments detected. Exiting. Run \"Cargo run -h\" or \"Cargo run --help\" for usage or check the README.md.");
         exit(1);
     }
-    (file, method, heuristic);
+    // println!("file: {}, method: {}, heuristic: {}", file, method, heuristic);
+    return (file, method, heuristic);
 }

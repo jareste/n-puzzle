@@ -10,14 +10,14 @@ struct Path {
     pub cost: i16,
 }
 
-impl Path {
-    pub fn new() -> Path {
-        &Path {
-            nodes: Vec::new(),
-            cost: 0,
-        }
-    }
-}
+// impl Path {
+//     pub fn new() -> Path {
+//         &Path {
+//             nodes: Vec::new(),
+//             cost: 0,
+//         }
+//     }
+// }
 
 
 

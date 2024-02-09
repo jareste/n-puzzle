@@ -6,7 +6,7 @@ pub struct Parser {
 }
 
 #[derive(Debug)]
-enum ParserError {//hacer un enum que devulva parser o error
+pub enum ParserError {//hacer un enum que devulva parser o error
     FileNotFound,
     FileNotReadable,
     SizeTooLarge,
@@ -14,23 +14,34 @@ enum ParserError {//hacer un enum que devulva parser o error
 }
 
 impl Parser {
-    pub fn parse_file(file: &str) -> Result<Parser, ParserError> {
-        let contents = match fs::read_to_string(file) {
-            Ok(contents) => contents,
-            Err(_) => return Err(ParserError::FileNotFound),
-        };
+    pub fn parse_file(contents: String) -> Result<Parser, ParserError> {
 
         let mut lines = contents.lines();
-        let first_line = match lines.next() {
+
+        let mut first_line = match lines.next() {
             Some(line) => line,
-            None => return Err(ParserError::FileNotReadable),
+            None => {
+                println!("Error: File is empty.");
+                return Err(ParserError::FileNotReadable)},
         };
+
+        if first_line == "# This puzzle is solvable" || first_line == "# This puzzle is unsolvable" {
+            first_line = match lines.next() {
+                Some(line) => line,
+                None => {
+                    println!("Error: File is empty.");
+                    return Err(ParserError::FileNotReadable)},
+            };
+        }
+
+        
 
         let size: usize = match first_line.trim().parse() {
             Ok(num) => num,
             Err(_) => return Err(ParserError::FileNotReadable),
         };
-        println!("size: {}", size);
+
+        // println!("size: {}", size);
         if size > 25 {
             return Err(ParserError::SizeTooLarge);
         }
