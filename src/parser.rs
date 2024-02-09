@@ -6,7 +6,7 @@ pub struct Parser {
 }
 
 #[derive(Debug)]
-pub enum ParserError {//hacer un enum que devulva parser o error
+enum ParserError {//hacer un enum que devulva parser o error
     FileNotFound,
     FileNotReadable,
     SizeTooLarge,
