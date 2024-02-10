@@ -1,7 +1,9 @@
-mod idastar;
 mod map;
-use idastar::my_idastar;
+mod solver;
+mod astar;
+mod idastar;
+use solver::solver;
 
 fn main() {
-    my_idastar();
+    solver();
 }
