@@ -82,7 +82,6 @@ pub fn check_solution(matrix: &Vec<Vec<i16>>) -> bool {
         for j in 0..line_goal.len() {
             if line_matrix[i] == line_goal[j] {
                 if (j + 1) == line_goal.len() {
-                    println!("entro:{}{}", j, line_goal.len());
                     line_matrix[i] = 0;
                     break;
                 }
