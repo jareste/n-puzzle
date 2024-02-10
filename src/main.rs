@@ -7,6 +7,8 @@ use check_args::check_args;
 mod generate_goal;
 use generate_goal::generate_goal;
 use std::process::exit;
+mod check_solution;
+use check_solution::check_solution;
 
 
 fn main() {
@@ -25,8 +27,16 @@ fn main() {
     }
 
     if let Some(matrix) = matrix {
-        // println!("matrix:\n{:?}", matrix);
+        println!("In matrix:");
+        for i in 0..matrix[0].len() {
+            println!("{:?}", matrix[i]);
+        }
+        if check_solution(&matrix) == false {
+            println!("The input is not a valid solution");
+            exit(1);
+        }
         generate_goal(matrix[0].len());
+
     }
     // debug veure q parser existeix i printa algo
     // jareste
