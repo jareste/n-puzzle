@@ -1,3 +1,5 @@
+use std::process::exit;//remove only debug
+
 pub struct Parser {
     pub map: Vec<Vec<i16>>,
     pub size: usize,
@@ -22,6 +24,7 @@ pub fn parse_file(contents: String) -> Result<Vec<Vec<i16>>, ParserError> {
     };
 
     if first_line == "# This puzzle is solvable" || first_line == "# This puzzle is unsolvable" {
+        println!("{}", first_line);
         first_line = match lines.next() {
             Some(line) => line,
             None => {

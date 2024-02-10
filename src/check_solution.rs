@@ -1,3 +1,5 @@
+use std::process::exit;
+
 // first i should index the matrix i got from the input
 struct Map {
     pub matrix: Vec<Vec<usize>>,
@@ -48,6 +50,26 @@ fn generate_goal(size: usize) -> Map {
 }
 // de aqui arriba va fuera de este archivo
 
+// for checking if a puzzle is solvable i must check how many numbers lower than the current number are between current position and final position
+fn is_solvable(matrix: &Vec<i16>) -> bool {
+    let mut inversions = 0;
+    // println!("matrix: ");
+    // println!("{:?}", matrix);
+    for i in 0..matrix.len() {
+        for j in i..matrix.len() {
+            if matrix[i] > matrix[j as usize] {
+                // println!("inversions: {} {}", matrix[i], matrix[j as usize]);
+                inversions += 1;
+            }
+        }
+    }
+
+    if inversions % 2 == 0 {
+        return true;
+    }
+    false
+}
+
 
 pub fn check_solution(matrix: &Vec<Vec<i16>>) -> bool {
 
@@ -81,14 +103,19 @@ pub fn check_solution(matrix: &Vec<Vec<i16>>) -> bool {
     for i in 0..line_matrix.len() {
         for j in 0..line_goal.len() {
             if line_matrix[i] == line_goal[j] {
-                if (j + 1) == line_goal.len() {
-                    line_matrix[i] = 0;
-                    break;
-                }
+                // if (j + 1) == line_goal.len() {
+                //     line_matrix[i] = 0;
+                //     break;
+                // }
                 line_matrix[i] = (j + 1) as i16;
                 break;
             }
         }
+    }
+    if is_solvable(&line_matrix) == false {
+        println!("no solution: {:?}", line_matrix);
+        println!("false exitiing");
+        exit(9);
     }
     println!("after indexing");
     println!("{:?}", line_matrix);
@@ -96,3 +123,21 @@ pub fn check_solution(matrix: &Vec<Vec<i16>>) -> bool {
     println!("{:?}", line_goal);
     true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
