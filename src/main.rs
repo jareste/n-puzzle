@@ -1,6 +1,8 @@
-mod idastar;
 mod map;
-use map::Map;
+mod solver;
+mod astar;
+mod idastar;
+use solver::solver;
 mod parser;
 mod check_args;
 use check_args::check_args;
