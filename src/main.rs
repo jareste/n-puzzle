@@ -40,9 +40,8 @@ fn main() {
         generate_goal(matrix[0].len());
 
     }
-    // debug veure q parser existeix i printa algo
+    //debug veure q parser existeix i printa algo
     // jareste
 
-    // idastar::idastar(map);
-
+    solver();
 }
