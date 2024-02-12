@@ -3,6 +3,7 @@ use core::panic;
 
 use crate::map::Map;
 use crate::idastar::ida_star;
+use crate::astar::a_star;
 use pathfinding::prelude::idastar;
 
 fn fill_goal_state(matrix: &mut Vec<Vec<i16>>, n: i16, x: i16, y: i16, dx: i16, dy:i16,  num: i16) {
@@ -84,4 +85,7 @@ pub fn solver() {
 
     let result2 = ida_star(&map, &goal);
     println!("My result: {:?}", result2);
+
+    let result3 = a_star(&map, &goal);
+    println!("My result: {:?}", result3);
 }

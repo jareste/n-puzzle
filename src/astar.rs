@@ -1,6 +1,7 @@
 use crate::map::Map;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
+use std::collections::HashSet;
 
 enum Path {
     Found(Vec<Map>, usize),
@@ -8,45 +9,60 @@ enum Path {
     Impossible,
 }
 
-fn reconstruct_path(path: HashMap<Map, Map>,goal: &Map) -> Vec<Map> {
-    let mut current = Vec::new();
-    current.push(goal);
-    while let Some(parent) = path.get(current.last().unwrap()){
-        current.push(parent);
-    }
-    current.reverse();
-    return current;
-}
 
 pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
 
-    let mut open = BinaryHeap::new();
+    let mut open_heap = BinaryHeap::new();
 
-    let mut came_from = HashMap::new();
-    
+    let mut opened = HashSet::new();
+    opened.insert(start.clone());
+    let mut closed = HashSet::new();
+
     let mut g_score = HashMap::new();
-    g_score.insert(start, 0);
+    g_score.insert(start.clone(), 0);
+    
+    open_heap.push((start.manhattan_dist(goal), start.clone()));
 
-    open.push((g_score[start], start));
+    while !open_heap.is_empty() {
+        let current = open_heap.pop().unwrap();
+        let current_node = current.1;
+        let current_punt = current.0;
 
-    while !open.is_empty() {
-        let current = open.pop().unwrap().1;
-
-        if current == goal {
-            return Some((reconstruct_path(came_from, goal), g_score[&current]));
+        if current_node == *goal {
+            return Some((vec![current_node], current_punt as usize));
         }
 
-        for (neighbor, cost) in current.successors() {
-            let tentative_g_score = g_score[&current] + cost as usize;
-            
-            if tentative_g_score < *g_score.get(&neighbor).unwrap_or(&usize::MAX) {
-                came_from.insert(&neighbor, current);
-                g_score.insert(&neighbor, tentative_g_score);
-                if !open.iter().any(|(_, n)| n == &&neighbor) {
-                    open.push((tentative_g_score + neighbor.manhattan_dist(goal) as usize, &neighbor));
+        closed.insert(current_node.clone());
+        opened.remove(&current_node);
+
+        for (neighbor, cost) in current_node.successors() {
+            let in_opened = opened.contains(&neighbor);
+            let in_closed = opened.contains(&neighbor);
+            let g = g_score.get(&current_node).unwrap() + cost;
+            let h = neighbor.manhattan_dist(goal);
+            let f = g + h;
+
+            if !in_opened && !in_closed {
+                open_heap.push((f, neighbor.clone()));
+                g_score.insert(neighbor.clone(), g);
+                opened.insert(neighbor.clone());
+            } 
+            else {
+                if *g_score.get(&neighbor).unwrap() > g{
+                    g_score.insert(neighbor.clone(), g);
+                    if in_opened{
+                        open_heap.push((f, neighbor.clone()));
+                    }
+                    if in_closed{
+                        opened.insert(neighbor.clone());
+                        closed.remove(&neighbor);
+                        open_heap.push((f, neighbor.clone()));
+                    }
                 }
             }
+
         }
     }
+
     return None;
 }
