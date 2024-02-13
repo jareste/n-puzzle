@@ -15,7 +15,7 @@ use check_solution::check_solution;
 
 fn main() {
     // jareste
-    let (file, method, heuristic) = check_args();
+    /*let (file, method, heuristic) = check_args();
     
     let mut matrix: Option<Vec<Vec<i16>>> = None;
     match parser::parse_file(file) {
@@ -42,6 +42,6 @@ fn main() {
     }
     //debug veure q parser existeix i printa algo
     // jareste
-
+    */
     solver();
 }

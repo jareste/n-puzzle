@@ -9,56 +9,71 @@ enum Path {
     Impossible,
 }
 
+struct Node {
+    g: usize,
+    f: usize,
+    parent: Option<Map>,
+}
+
 
 pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
 
-    let mut open_heap = BinaryHeap::new();
+    let mut open = BinaryHeap::new();
 
-    let mut opened = HashSet::new();
-    opened.insert(start.clone());
-    let mut closed = HashSet::new();
+    let mut node_info = HashMap::new();
 
-    let mut g_score = HashMap::new();
-    g_score.insert(start.clone(), 0);
+    open.push((usize::MAX -start.manhattan_dist(goal) as usize, (start.clone(), 0 as usize)));
+
+    node_info.insert(start.clone(), Node {
+        g: 0,
+        f: start.manhattan_dist(goal) as usize,
+        parent: None,
+    });
+
     
-    open_heap.push((start.manhattan_dist(goal), start.clone()));
 
-    while !open_heap.is_empty() {
-        let current = open_heap.pop().unwrap();
-        let current_node = current.1;
-        let current_punt = current.0;
+    while !open.is_empty() {
+        let current = open.pop().unwrap();
+        let current_node = current.1.0;
+        //let current_h = current.0;
+        let current_g = current.1.1;
 
         if current_node == *goal {
-            return Some((vec![current_node], current_punt as usize));
+            let mut path = vec![];
+            let mut current = current_node;
+            while current != *start {
+                path.push(current.clone());
+                current = node_info[&current].parent.clone().unwrap();
+            }
+            path.reverse();
+            return Some((path, current_g as usize));
         }
 
-        closed.insert(current_node.clone());
-        opened.remove(&current_node);
+        if current_g > node_info[&current_node].g {
+            continue;
+        }
 
         for (neighbor, cost) in current_node.successors() {
-            let in_opened = opened.contains(&neighbor);
-            let in_closed = opened.contains(&neighbor);
-            let g = g_score.get(&current_node).unwrap() + cost;
-            let h = neighbor.manhattan_dist(goal);
-            let f = g + h;
+            let new_g = current_g + cost as usize;
+            let new_h = neighbor.manhattan_dist(goal);
+            let new_f = new_g + new_h as usize;
 
-            if !in_opened && !in_closed {
-                open_heap.push((f, neighbor.clone()));
-                g_score.insert(neighbor.clone(), g);
-                opened.insert(neighbor.clone());
-            } 
-            else {
-                if *g_score.get(&neighbor).unwrap() > g{
-                    g_score.insert(neighbor.clone(), g);
-                    if in_opened{
-                        open_heap.push((f, neighbor.clone()));
-                    }
-                    if in_closed{
-                        opened.insert(neighbor.clone());
-                        closed.remove(&neighbor);
-                        open_heap.push((f, neighbor.clone()));
-                    }
+            if node_info.contains_key(&neighbor) {
+                if new_f < node_info[&neighbor].f {
+                    node_info.insert(neighbor.clone(), Node {
+                        g: new_g,
+                        f: new_f,
+                        parent: Some(current_node.clone()),
+                    });
+                    open.push((usize::MAX -new_f, (neighbor.clone(), new_g)));
                 }
+            } else {
+                node_info.insert(neighbor.clone(), Node {
+                    g: new_g,
+                    f: new_f,
+                    parent: Some(current_node.clone()),
+                });
+                open.push((usize::MAX -new_f, (neighbor.clone(), new_g)));
             }
 
         }

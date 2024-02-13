@@ -65,7 +65,7 @@ fn get_goal_state(n: i16) -> Map{
 }
 
 
-pub fn solver() {
+pub fn solver(heuristic: &str, algorithm: &str, start: &Map, goal: &Map){
     let goal = get_goal_state(3);
     println!("{:?}", goal);
     let map = Map {
@@ -78,14 +78,11 @@ pub fn solver() {
         y: 2,
         size: 3,
     };
-    let result = idastar(&map, |m| m.successors(), |m| m.manhattan_dist(&goal),
-                        |m| *m == goal);
+    let result = match algorithm {
+        "ida_star" => ida_star(&map, &goal),
+        "a_star" => a_star(&map, &goal),
+        _ => panic!("Invalid algorithm"),
+    };
     println!("Result: {:?}", result);
 
-
-    let result2 = ida_star(&map, &goal);
-    println!("My result: {:?}", result2);
-
-    let result3 = a_star(&map, &goal);
-    println!("My result: {:?}", result3);
 }
