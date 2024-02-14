@@ -1,4 +1,4 @@
-use std::process::exit;//remove only debug
+//use std::process::exit;//remove only debug
 
 pub struct Parser {
     pub map: Vec<Vec<i16>>,

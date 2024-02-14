@@ -2,8 +2,6 @@ use crate::map::Map;
 use crate::solver;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
-use crate::solver::Heuristic;
-use crate::solver::HMethod;
 
 enum Path {
     Found(Vec<Map>, usize),
@@ -18,7 +16,7 @@ struct Node {
 }
 
 
-pub fn a_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: solver::HMethod) -> Option<(Vec<Map>, usize, usize, usize)> {
+pub fn a_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: solver::HMethod, max_p: &usize) -> Option<(Vec<Map>, usize, usize, usize)> {
 
     let mut open = BinaryHeap::new();
 
@@ -59,7 +57,7 @@ pub fn a_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: s
             return Some((path, current_g as usize, time_c, time_c));
         }
 
-        if current_g > node_info[&current_node].g {
+        if current_g > node_info[&current_node].g || current_g >= *max_p {
             continue;
         }
 

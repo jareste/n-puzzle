@@ -46,7 +46,7 @@ fn main() {
             };
             let goal = generate_goal(matrix[0].len() as usize);
             println!("Method: {}", method);
-            solver(&heuristic, &"ida_star",&method, &start, &goal);
+            solver(&heuristic, &"ida_star",&method, &start, &goal, usize::MAX);
         }
 
     }

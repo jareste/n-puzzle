@@ -7,17 +7,36 @@ pub struct Map {
     pub size: usize,
 }
 
+static mut GOAL_VEC: Vec<(usize, usize)> = Vec::new();
+
 
 impl Map {
-    pub fn find(&self, value: i16) -> (usize, usize) {
-        for i in 0..self.size {
-            for j in 0..self.size {
-                if self.matrix[i][j] == value {
-                    return (i, j);
+    pub fn find(&self, goal: &Map, value: i16) -> (usize, usize) {
+        if false{
+            for i in 0..self.size {
+                for j in 0..self.size {
+                    if self.matrix[i][j] == value {
+                        return (i, j);
+                    }
                 }
             }
+            panic!("Value not found in matrix");
         }
-        panic!("Value not found in matrix");
+        else{
+            unsafe{
+                if GOAL_VEC.is_empty(){
+                    GOAL_VEC = vec![(0, 0); (self.size * self.size) as usize];
+                    for i in 0..self.size {
+                        for j in 0..self.size {
+                            let aux = goal.matrix[i][j];
+                            GOAL_VEC[aux as usize] = (i, j);
+                            println!("{:?} ", GOAL_VEC[aux as usize])
+                        }
+                    }
+                }
+                return GOAL_VEC[value as usize];
+            }
+        }
     }
 
     pub fn manhattan_dist(&self, other: &Map) -> u32 {
@@ -27,7 +46,7 @@ impl Map {
             for j in 0..self.size {
                 let value = self.matrix[i][j];
                 if value != 0 {
-                    let (x, y) = other.find(value);
+                    let (x, y) = other.find(other, value);
                     dist += ((i as i32 - x as i32).abs() + (j as i32 - y as i32).abs()) as u32;
                 }
             }
@@ -41,7 +60,7 @@ impl Map {
             for j in 0..self.size {
                 let value = self.matrix[i][j];
                 if value != 0 {
-                    let (x, y) = other.find(value);
+                    let (x, y) = other.find(other, value);
                     dist += (((i as i32 - x as i32).pow(2) + (j as i32 - y as i32).pow(2)) as f64).sqrt() as u32 -1;
                 }
             }
@@ -68,12 +87,12 @@ impl Map {
             for j in 0..self.size{
                 let value = self.matrix[i][j];
                 if value != 0 {
-                    let (x, y) = other.find(value);
+                    let (x, y) = other.find(other, value);
                     if i == x {
                         for k in j+1..self.size {
                             let value2 = self.matrix[i][k];
                             if value2 != 0 {
-                                let (x2, y2) = other.find(value2);
+                                let (x2, y2) = other.find(other, value2);
                                 if x2 == i && y2 < y {
                                     dist += 2;
                                 }
@@ -84,7 +103,7 @@ impl Map {
                         for k in i+1..self.size {
                             let value2 = self.matrix[k][j];
                             if value2 != 0 {
-                                let (x2, y2) = other.find(value2);
+                                let (x2, y2) = other.find(other, value2);
                                 if y2 == j && x2 < x {
                                     dist += 2;
                                 }

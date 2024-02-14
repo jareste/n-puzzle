@@ -7,16 +7,22 @@ enum Path {
     Impossible,
 }
 
-pub fn ida_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: solver::HMethod) -> Option<(Vec<Map>, usize, usize, usize)> {
+pub fn ida_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: solver::HMethod, max_p: &usize) -> Option<(Vec<Map>, usize, usize, usize)> {
 
     let mut bound = start.manhattan_dist(goal) as usize;
     let mut path = vec![start.clone()];
 
+    let mut time_c: usize = 0;
+    let mut space_c: usize = 0;
+
     loop {
-        match search(&mut path, 0, bound, goal, &heuristic, &h_method) {
-            Path::Found(p, c, time_c, space_c) => return Some((p, c, time_c, space_c)),
+        match search(&mut path, 0, bound, goal, &heuristic, &h_method, &mut time_c, &mut space_c) {
+            Path::Found(p, c) => return Some((p, c, time_c, space_c)),
             Path::Minimum(c) => {
                 if bound == c{
+                    return None;
+                }
+                if c >= *max_p{
                     return None;
                 }
                 bound = c;
@@ -28,8 +34,12 @@ pub fn ida_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method:
     
 }
 
-fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &solver::Heuristic, h_method: &solver::HMethod) -> Path {
+fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &solver::Heuristic, h_method: &solver::HMethod, time_c: &mut usize, space_c: &mut usize) -> Path {
     let node = path.last().unwrap();
+    *time_c += 1;
+    if (path.len() as usize) > *space_c {
+        *space_c = path.len();
+    }
 
     let h = match heuristic{
         solver::Heuristic::Manhattan => node.manhattan_dist(goal),
@@ -55,7 +65,7 @@ fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &
     for (succ, cost) in node.successors() {
         if !path.contains(&succ) {
             path.push(succ);
-            match search(path, g + cost as usize, bound, goal, heuristic, h_method) {
+            match search(path, g + cost as usize, bound, goal, heuristic, h_method, time_c, space_c) {
                 Path::Found(p, c) => return Path::Found(p, c),
                 Path::Minimum(c) => min = min.min(c),
                 Path::Impossible => return Path::Impossible,
