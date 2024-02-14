@@ -1,7 +1,9 @@
 use crate::map::Map;
+use crate::solver;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
-use std::collections::HashSet;
+use crate::solver::Heuristic;
+use crate::solver::HMethod;
 
 enum Path {
     Found(Vec<Map>, usize),
@@ -16,7 +18,7 @@ struct Node {
 }
 
 
-pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
+pub fn a_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: solver::HMethod) -> Option<(Vec<Map>, usize, usize, usize)> {
 
     let mut open = BinaryHeap::new();
 
@@ -24,12 +26,20 @@ pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
 
     open.push((usize::MAX -start.manhattan_dist(goal) as usize, (start.clone(), 0 as usize)));
 
+    let start_f = match heuristic{
+        solver::Heuristic::Manhattan => start.manhattan_dist(goal),
+        solver::Heuristic::Hamming => start.hamming_dist(goal),
+        solver::Heuristic::Euclidean => start.euclidean_dist(goal),
+        solver::Heuristic::LinearConflicts => start.manhattan_linear_conflicts(goal),
+    };
+
     node_info.insert(start.clone(), Node {
         g: 0,
-        f: start.manhattan_dist(goal) as usize,
+        f: start_f as usize,
         parent: None,
     });
 
+    let mut time_c = 1;
     
 
     while !open.is_empty() {
@@ -46,7 +56,7 @@ pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
                 current = node_info[&current].parent.clone().unwrap();
             }
             path.reverse();
-            return Some((path, current_g as usize));
+            return Some((path, current_g as usize, time_c, time_c));
         }
 
         if current_g > node_info[&current_node].g {
@@ -55,8 +65,19 @@ pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
 
         for (neighbor, cost) in current_node.successors() {
             let new_g = current_g + cost as usize;
-            let new_h = neighbor.manhattan_dist(goal);
-            let new_f = new_g + new_h as usize;
+
+            let new_h = match heuristic{
+                solver::Heuristic::Manhattan => neighbor.manhattan_dist(goal),
+                solver::Heuristic::Hamming => neighbor.hamming_dist(goal),
+                solver::Heuristic::Euclidean => neighbor.euclidean_dist(goal),
+                solver::Heuristic::LinearConflicts => neighbor.manhattan_linear_conflicts(goal),
+            };
+
+            let new_f = match h_method{
+                solver::HMethod::Normal => new_g + new_h as usize,
+                solver::HMethod::Greedy => new_h as usize,
+                solver::HMethod::Uniform => new_g,
+            };
 
             if node_info.contains_key(&neighbor) {
                 if new_f < node_info[&neighbor].f {
@@ -66,6 +87,7 @@ pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
                         parent: Some(current_node.clone()),
                     });
                     open.push((usize::MAX -new_f, (neighbor.clone(), new_g)));
+                    time_c += 1;
                 }
             } else {
                 node_info.insert(neighbor.clone(), Node {
@@ -74,6 +96,7 @@ pub fn a_star(start: &Map, goal: &Map) -> Option<(Vec<Map>, usize)> {
                     parent: Some(current_node.clone()),
                 });
                 open.push((usize::MAX -new_f, (neighbor.clone(), new_g)));
+                time_c += 1;
             }
 
         }

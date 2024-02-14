@@ -11,7 +11,7 @@ use generate_goal::generate_goal;
 use std::process::exit;
 mod check_solution;
 use check_solution::check_solution;
-use solver::get_xy;
+use map::get_0;
 
 fn main() {
     // jareste
@@ -40,11 +40,12 @@ fn main() {
         else{
             let start = map::Map {
                 matrix: matrix.clone(),
-                x: get_xy(& matrix, matrix[0].len() as i16).0,
-                y: get_xy(& matrix, matrix[0].len() as i16).1,
+                x: get_0(& matrix, matrix[0].len() as i16).0,
+                y: get_0(& matrix, matrix[0].len() as i16).1,
                 size: matrix[0].len(),
             };
             let goal = generate_goal(matrix[0].len() as usize);
+            println!("Method: {}", method);
             solver(&heuristic, &"ida_star",&method, &start, &goal);
         }
 

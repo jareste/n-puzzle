@@ -34,7 +34,7 @@ fn get_file_contents(file: &str) -> String {
 pub fn check_args() -> (String, String, String) {
     let mut file = String::new();
     let mut filefound: bool = false;
-    let mut method: String = "greedy".to_string();
+    let mut method: String = "normal".to_string();
     let mut methodfound: bool = false;
     let mut heuristic: String = "manhattan".to_string();
     let mut heuristicfound: bool = false;

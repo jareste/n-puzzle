@@ -1,3 +1,4 @@
+
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Map {
     pub matrix: Vec<Vec<i16>>,
@@ -34,7 +35,7 @@ impl Map {
         dist
     }
 
-    pub fn euclidian_dist(&self, other: &Map) -> u32 {
+    pub fn euclidean_dist(&self, other: &Map) -> u32 {
         let mut dist = 0;
         for i in 0..self.size {
             for j in 0..self.size {
@@ -54,6 +55,42 @@ impl Map {
             for j in 0..self.size {
                 if self.matrix[i][j] != other.matrix[i][j] {
                     dist += 1;
+                }
+            }
+        }
+        dist
+    }
+
+    pub fn manhattan_linear_conflicts(&self, other: &Map) -> u32 {
+        let mut dist = self.manhattan_dist(other);
+
+        for i in 0..self.size {
+            for j in 0..self.size{
+                let value = self.matrix[i][j];
+                if value != 0 {
+                    let (x, y) = other.find(value);
+                    if i == x {
+                        for k in j+1..self.size {
+                            let value2 = self.matrix[i][k];
+                            if value2 != 0 {
+                                let (x2, y2) = other.find(value2);
+                                if x2 == i && y2 < y {
+                                    dist += 2;
+                                }
+                            }
+                        }
+                    }
+                    if j == y {
+                        for k in i+1..self.size {
+                            let value2 = self.matrix[k][j];
+                            if value2 != 0 {
+                                let (x2, y2) = other.find(value2);
+                                if y2 == j && x2 < x {
+                                    dist += 2;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -91,3 +128,14 @@ impl Map {
         successors.into_iter().map(|m| (m, 1)).collect()
     }
  }
+
+ pub fn get_0(matrix: & Vec<Vec<i16>>, n: i16) -> (i16, i16) {
+    for i in 0..n {
+        for j in 0..n {
+            if matrix[i as usize][j as usize] == 0 {
+                return (i, j);
+            }
+        }
+    }
+    panic!("Value not found in matrix");
+}
