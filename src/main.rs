@@ -1,6 +1,8 @@
-mod idastar;
 mod map;
-use map::Map;
+mod solver;
+mod astar;
+mod idastar;
+use solver::solver;
 mod parser;
 mod check_args;
 use check_args::check_args;
@@ -38,9 +40,8 @@ fn main() {
         generate_goal(matrix[0].len());
 
     }
-    // debug veure q parser existeix i printa algo
+    //debug veure q parser existeix i printa algo
     // jareste
 
-    // idastar::idastar(map);
-
+    solver();
 }
