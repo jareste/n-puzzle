@@ -1,9 +1,11 @@
-pub struct Map {
-    pub matrix: Vec<Vec<usize>>,
-    pub x: isize,
-    pub y: isize,
-    pub size: usize,
-}
+use crate::map::Map;
+
+// pub struct Map {
+//     pub matrix: Vec<Vec<usize>>,
+//     pub x: isize,
+//     pub y: isize,
+//     pub size: usize,
+// }
 
 pub fn generate_goal(size: usize) -> Map {
     let mut map = Map {

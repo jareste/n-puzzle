@@ -1,12 +1,14 @@
 use std::process::exit;
+use crate::map::Map;
 
 // first i should index the matrix i got from the input
-struct Map {
-    pub matrix: Vec<Vec<usize>>,
-    pub x: isize,
-    pub y: isize,
-    pub size: usize,
-}
+// struct Map {
+//     pub matrix: Vec<Vec<usize>>,
+//     pub x: isize,
+//     pub y: isize,
+//     pub size: usize,
+// }
+
 
 fn generate_goal(size: usize) -> Map {
     let mut map = Map {
@@ -51,7 +53,7 @@ fn generate_goal(size: usize) -> Map {
 // de aqui arriba va fuera de este archivo
 
 // for checking if a puzzle is solvable i must check how many numbers lower than the current number are between current position and final position
-fn is_solvable(matrix: &Vec<i16>) -> bool {
+fn is_solvable(matrix: &Vec<usize>) -> bool {
     let mut inversions = 0;
     // println!("matrix: ");
     // println!("{:?}", matrix);
@@ -71,9 +73,9 @@ fn is_solvable(matrix: &Vec<i16>) -> bool {
 }
 
 
-pub fn check_solution(matrix: &Vec<Vec<i16>>) -> bool {
+pub fn check_solution(matrix: &Vec<Vec<usize>>) -> bool {
 
-    let mut line_matrix: Vec<i16> = vec![-1; matrix[0].len() * matrix[0].len()];
+    let mut line_matrix: Vec<usize> = vec![0; matrix[0].len() * matrix[0].len()];
 
     for i in 0..matrix[0].len() {
         for j in 0..matrix[0].len() {
@@ -87,13 +89,13 @@ pub fn check_solution(matrix: &Vec<Vec<i16>>) -> bool {
 
     let map = generate_goal(matrix[0].len());
 
-    let mut line_goal: Vec<i16> = vec![-1; matrix[0].len() * matrix[0].len()];
+    let mut line_goal: Vec<usize> = vec![0; matrix[0].len() * matrix[0].len()];
     for i in 0..matrix[0].len() {
         for j in 0..matrix[0].len() {
             if map.matrix[i][j] == 0 {
                 line_goal[matrix[0].len() * i + j] = 0;
             } else {
-                line_goal[matrix[0].len() * i + j] = map.matrix[i][j] as i16;
+                line_goal[matrix[0].len() * i + j] = map.matrix[i][j];
             }
         }
     }
@@ -107,7 +109,7 @@ pub fn check_solution(matrix: &Vec<Vec<i16>>) -> bool {
                 //     line_matrix[i] = 0;
                 //     break;
                 // }
-                line_matrix[i] = (j + 1) as i16;
+                line_matrix[i] = (j + 1) as usize;
                 break;
             }
         }

@@ -1,14 +1,14 @@
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Map {
-    pub matrix: Vec<Vec<i16>>,
-    pub x: i16,
-    pub y: i16,
+    pub matrix: Vec<Vec<usize>>,
+    pub x: isize,
+    pub y: isize,
     pub size: usize,
 }
 
 
 impl Map {
-    pub fn find(&self, value: i16) -> (usize, usize) {
+    pub fn find(&self, value: usize) -> (usize, usize) {
         for i in 0..self.size {
             for j in 0..self.size {
                 if self.matrix[i][j] == value {
@@ -34,7 +34,7 @@ impl Map {
         dist
     }
 
-    pub fn update_matrix(&self, dx: i16, dy: i16) -> Vec<Vec<i16>> {
+    pub fn update_matrix(&self, dx: isize, dy: isize) -> Vec<Vec<usize>> {
         //println!("x: {} y: {} mat: {:?}",self.x, self.y, self.matrix);
         let mut new_matrix = self.matrix.clone();
         let new_x = (self.x + dx) as usize;
@@ -49,13 +49,13 @@ impl Map {
     pub fn successors(&self) -> Vec<(Map, u32)> {
         let &Map{matrix: _, x, y, size:_} = self;
         let mut successors = Vec::new();
-        if y + 1 < self.size as i16{
+        if y + 1 < self.size as isize{
             successors.push(Map { matrix: self.update_matrix(0, 1), x, y: y + 1, size: self.size});
         }
         if y - 1 >= 0 {
             successors.push(Map { matrix: self.update_matrix(0, -1), x, y: y - 1, size: self.size });
         }
-        if x + 1 < self.size as i16 {
+        if x + 1 < self.size as isize {
             successors.push(Map { matrix: self.update_matrix(1, 0), x: x + 1, y, size: self.size });
         }
         if x - 1 >= 0 {
