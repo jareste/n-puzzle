@@ -11,11 +11,11 @@ use generate_goal::generate_goal;
 use std::process::exit;
 mod check_solution;
 use check_solution::check_solution;
-
+use solver::get_xy;
 
 fn main() {
     // jareste
-    /*let (file, method, heuristic) = check_args();
+    let (file, method, heuristic) = check_args();
     
     let mut matrix: Option<Vec<Vec<i16>>> = None;
     match parser::parse_file(file) {
@@ -37,11 +37,16 @@ fn main() {
             println!("The input is not a valid solution");
             exit(1);
         }
-        generate_goal(matrix[0].len());
+        else{
+            let start = map::Map {
+                matrix: matrix.clone(),
+                x: get_xy(& matrix, matrix[0].len() as i16).0,
+                y: get_xy(& matrix, matrix[0].len() as i16).1,
+                size: matrix[0].len(),
+            };
+            let goal = generate_goal(matrix[0].len() as usize);
+            solver(&heuristic, &"ida_star",&method, &start, &goal);
+        }
 
     }
-    //debug veure q parser existeix i printa algo
-    // jareste
-    */
-    solver();
 }

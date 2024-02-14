@@ -34,6 +34,32 @@ impl Map {
         dist
     }
 
+    pub fn euclidian_dist(&self, other: &Map) -> u32 {
+        let mut dist = 0;
+        for i in 0..self.size {
+            for j in 0..self.size {
+                let value = self.matrix[i][j];
+                if value != 0 {
+                    let (x, y) = other.find(value);
+                    dist += (((i as i32 - x as i32).pow(2) + (j as i32 - y as i32).pow(2)) as f64).sqrt() as u32 -1;
+                }
+            }
+        }
+        dist
+    }
+
+    pub fn hamming_dist(&self, other: &Map) -> u32 {
+        let mut dist = 0;
+        for i in 0..self.size {
+            for j in 0..self.size {
+                if self.matrix[i][j] != other.matrix[i][j] {
+                    dist += 1;
+                }
+            }
+        }
+        dist
+    }
+
     pub fn update_matrix(&self, dx: i16, dy: i16) -> Vec<Vec<i16>> {
         //println!("x: {} y: {} mat: {:?}",self.x, self.y, self.matrix);
         let mut new_matrix = self.matrix.clone();
