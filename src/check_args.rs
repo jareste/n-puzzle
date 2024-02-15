@@ -70,7 +70,7 @@ pub fn check_args() -> (String, String, String, i16, String) {
             }
         }
         else if args[i] == "-he" || args[i] == "--heuristic" {
-            if i + 1 < args.len() && heuristicfound == false && (args[i + 1] == "manhattan" || args[i + 1] == "hamming" || args[i + 1] == "euclidean" || args[i + 1] == "linear_conflicts" || args[i + 1] == "NoAdmisible") {
+            if i + 1 < args.len() && heuristicfound == false && (args[i + 1].to_lowercase() == "manhattan" || args[i + 1].to_lowercase() == "hamming" || args[i + 1].to_lowercase() == "euclidean" || args[i + 1].to_lowercase() == "linear_conflicts" || args[i + 1].to_lowercase() == "noadmisible") {
                 heuristicfound = true;
                 heuristic = args[i + 1].clone();
             } else {
@@ -79,11 +79,11 @@ pub fn check_args() -> (String, String, String, i16, String) {
             }
         }
         else if args[i] == "-m" || args[i] == "--method" {
-            if i + 1 < args.len() && methodfound == false && (args[i + 1] == "greedy" || args[i + 1] == "uniform" || args[i + 1] == "normal")  {
+            if i + 1 < args.len() && methodfound == false && (args[i + 1].to_lowercase() == "greedy" || args[i + 1].to_lowercase() == "uniform" || args[i + 1].to_lowercase() == "normal")  {
                 methodfound = true;
                 method = args[i + 1].clone();
             } else {
-                println!("File flag detected but no argument following it. Exiting.");
+                println!("Method flag detected but no valid argument following it. Exiting.");
                 exit(1);
             }
 
@@ -99,7 +99,7 @@ pub fn check_args() -> (String, String, String, i16, String) {
             }
         }
         else if args[i] == "-a" || args[i] == "--algorithm" {
-            if i + 1 < args.len() && (args[i + 1] == "a_star" || args[i + 1] == "ida_star") && algorithmfound == false {
+            if i + 1 < args.len() && (args[i + 1].to_lowercase() == "a_star" || args[i + 1].to_lowercase() == "ida_star") && algorithmfound == false {
                 algorithmfound = true;
                 algorithm = args[i + 1].clone();
             } else {
@@ -144,6 +144,5 @@ pub fn check_args() -> (String, String, String, i16, String) {
         println!("No file or generation flag detected. Exiting. Run \"Cargo run -- -h\" for more info.");
         exit(1);
     }
-    // println!("file: {}, method: {}, heuristic: {}", file, method, heuristic);
     return (file, method, heuristic, o_value, algorithm);
 }

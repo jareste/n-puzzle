@@ -63,7 +63,9 @@ impl Map {
                 let value = self.matrix[i][j];
                 if value != 0 {
                     let (x, y) = other.find(other, value);
-                    dist += (((i as i32 - x as i32).pow(2) + (j as i32 - y as i32).pow(2)) as f64).sqrt() as u32 -1;
+                    let dx = (i as i32 - x as i32).abs();
+                    let dy = (j as i32 - y as i32).abs();
+                    dist += (((dx).pow(2) + (dy).pow(2)) as f64).sqrt() as u32;
                 }
             }
         }
