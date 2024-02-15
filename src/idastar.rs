@@ -73,8 +73,8 @@ fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &
             path.pop();
         }
     }
-    if min == usize::MAX {
-        return Path::Impossible;
-    }
+    //if min == usize::MAX {
+    //    return Path::Impossible;
+    //}
     Path::Minimum(min)
 }
