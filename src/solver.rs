@@ -39,6 +39,7 @@ fn str_to_method(h_method: &str) -> HMethod {
     }
 }
 
+
 fn print_sol(sol: Option<(Vec<Map>, usize, usize, usize)>, time_elapsed: f64){
     match sol {
         Some((path, cost, time_c, space_c)) => {
@@ -60,7 +61,6 @@ fn print_sol(sol: Option<(Vec<Map>, usize, usize, usize)>, time_elapsed: f64){
         None => println!("No solution found"),
     }
 }
-
 
 pub fn solver(heuristic: &str,algorithm: &str, h_method: &str,start: &Map, goal: &Map, max_p: usize){
     if algorithm == "default"{

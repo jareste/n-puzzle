@@ -1,4 +1,5 @@
-//use std::process::exit;//remove only debug
+use std::process::exit;//remove only debug
+use crate::map::Map;
 
 pub struct Parser {
     pub map: Vec<Vec<i16>>,
@@ -12,7 +13,18 @@ pub enum ParserError {//hacer un enum que devulva parser o error
     InvalidFormat,
 }
 
-pub fn parse_file(contents: String) -> Result<Vec<Vec<i16>>, ParserError> {
+fn find_zero(matrix: &Vec<Vec<usize>>) -> (isize, isize) {
+    for i in 0..matrix.len() {
+        for j in 0..matrix[i].len() {
+            if matrix[i][j] == 0 {
+                return (i as isize, j as isize);
+            }
+        }
+    }
+    panic!("Value not found in matrix");
+}
+
+pub fn parse_file(contents: String) -> Result<Map, ParserError> {
 
     let mut lines = contents.lines();
 
@@ -45,8 +57,10 @@ pub fn parse_file(contents: String) -> Result<Vec<Vec<i16>>, ParserError> {
         return Err(ParserError::SizeTooLarge);
     }
 
-    let mut parser = Parser {
-        map: vec![vec![0i16; size]; size],
+    let mut map = Map {
+        matrix: vec![vec![0usize; size]; size],
+        x: 0,
+        y: 0,
         size: size,
     };
     
@@ -59,9 +73,9 @@ pub fn parse_file(contents: String) -> Result<Vec<Vec<i16>>, ParserError> {
         
         let mut col = 0;
         for num_str in numbers {
-            match num_str.parse::<i16>() {
+            match num_str.parse::<usize>() {
                 Ok(num) => {
-                    parser.map[row][col] = num;
+                    map.matrix[row][col] = num;
                     col += 1;
                 }
                 Err(_) => return Err(ParserError::InvalidFormat),
@@ -69,5 +83,8 @@ pub fn parse_file(contents: String) -> Result<Vec<Vec<i16>>, ParserError> {
         }
         row += 1;
     }
-    Ok(parser.map)
+    (map.x, map.y) = find_zero(&map.matrix);
+    println!("map.x: {} map.y: {}", map.x, map.y);
+    // println!("map.matrix: {}", map.matrix[map.x as usize][map.y as usize]);
+    Ok(map)
 }

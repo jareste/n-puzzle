@@ -17,9 +17,9 @@ pub fn generate_goal(size: usize) -> Map {
     while counter < size * size {
         if x >= 0 && x < size as isize && y >= 0 && y < size as isize {
             counter += 1;
-            map.matrix[x as usize][y as usize] = counter as i16;
-            map.x = x as i16;
-            map.y = y as i16;
+            map.matrix[x as usize][y as usize] = counter as usize;
+            map.x = x as isize;
+            map.y = y as isize;
         }
 
         if x + dx >= size as isize || x + dx < 0 || y + dy >= size as isize || y + dy < 0 || map.matrix[(x + dx) as usize][(y + dy) as usize] != 0 {
