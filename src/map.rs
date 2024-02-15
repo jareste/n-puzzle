@@ -119,13 +119,11 @@ impl Map {
     }
 
     pub fn update_matrix(&self, dx: isize, dy: isize) -> Vec<Vec<usize>> {
-        //println!("x: {} y: {} mat: {:?}",self.x, self.y, self.matrix);
         let mut new_matrix = self.matrix.clone();
         let new_x = (self.x + dx) as usize;
         let new_y = (self.y + dy) as usize;
         new_matrix[new_x][new_y] = 0;
         new_matrix[self.x as usize][self.y as usize] = self.matrix[new_x][new_y];
-        //println!("x: {} y: {} mat: {:?}",dx, dy, new_matrix);
         new_matrix
         
     }
@@ -149,14 +147,3 @@ impl Map {
         successors.into_iter().map(|m| (m, 1)).collect()
     }
  }
-
- pub fn get_0(matrix: & Vec<Vec<i16>>, n: i16) -> (i16, i16) {
-    for i in 0..n {
-        for j in 0..n {
-            if matrix[i as usize][j as usize] == 0 {
-                return (i, j);
-            }
-        }
-    }
-    panic!("Value not found in matrix");
-}

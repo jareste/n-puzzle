@@ -60,7 +60,7 @@ fn print_sol(sol: Option<(Vec<Map>, usize, usize, usize)>, time_elapsed: f64){
             println!("Space complexity: {}", space_c);
             println!("Time elapsed: {}", time_elapsed);
         }
-        None => println!("No solution found"),
+        None => println!("No solution found after running specified movements."),
     }
 }
 
@@ -69,12 +69,10 @@ pub fn solver(heuristic: &str,algorithm: &str, h_method: &str,start: &Map, goal:
     for i in 0..start.matrix[0].len() {
         println!("{:?}", start.matrix[i]);
     }
-    println!("start00: {} ", start.matrix[start.x as usize][start.y as usize]);
-    println!("GOAL:");
+    println!("goal:");
     for i in 0..goal.matrix[0].len() {
         println!("{:?}", goal.matrix[i]);
     }
-    println!("GOAL00: {} ", goal.matrix[goal.x as usize][goal.y as usize]);
 
     if algorithm == "default"{
         let result = idastar(start, |m| m.successors(), |m| m.manhattan_dist(goal),|m| *m == *goal);

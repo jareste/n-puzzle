@@ -1,10 +1,4 @@
-use std::process::exit;//remove only debug
 use crate::map::Map;
-
-pub struct Parser {
-    pub map: Vec<Vec<i16>>,
-    pub size: usize,
-}
 
 #[derive(Debug)]
 pub enum ParserError {//hacer un enum que devulva parser o error
@@ -52,7 +46,6 @@ pub fn parse_file(contents: String) -> Result<Map, ParserError> {
         Err(_) => return Err(ParserError::FileNotReadable),
     };
 
-    // println!("size: {}", size);
     if size > 25 {
         return Err(ParserError::SizeTooLarge);
     }
@@ -84,7 +77,5 @@ pub fn parse_file(contents: String) -> Result<Map, ParserError> {
         row += 1;
     }
     (map.x, map.y) = find_zero(&map.matrix);
-    println!("map.x: {} map.y: {}", map.x, map.y);
-    // println!("map.matrix: {}", map.matrix[map.x as usize][map.y as usize]);
     Ok(map)
 }

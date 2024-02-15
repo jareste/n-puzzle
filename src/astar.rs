@@ -3,12 +3,6 @@ use crate::solver;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
 
-enum Path {
-    Found(Vec<Map>, usize),
-    Minimum(usize),
-    Impossible,
-}
-
 struct Node {
     g: usize,
     f: usize,
@@ -45,7 +39,6 @@ pub fn a_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: s
     while !open.is_empty() {
         let current = open.pop().unwrap();
         let current_node = current.1.0;
-        //let current_h = current.0;
         let current_g = current.1.1;
 
         if current_node == *goal {

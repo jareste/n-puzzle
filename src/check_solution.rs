@@ -1,15 +1,6 @@
 use std::process::exit;
 use crate::map::Map;
 
-// first i should index the matrix i got from the input
-// struct Map {
-//     pub matrix: Vec<Vec<usize>>,
-//     pub x: isize,
-//     pub y: isize,
-//     pub size: usize,
-// }
-
-
 fn generate_goal(size: usize) -> Map {
     let mut map = Map {
         matrix: vec![vec![0; size]; size],
@@ -44,23 +35,15 @@ fn generate_goal(size: usize) -> Map {
 
     map.matrix[map.x as usize][map.y as usize] = 0;
 
-    // println!("Goal:");
-    // for i in 0..size {
-    //     println!("{:?}", map.matrix[i]);
-    // }
     map
 }
-// de aqui arriba va fuera de este archivo
 
-// for checking if a puzzle is solvable i must check how many numbers lower than the current number are between current position and final position
+
 fn is_solvable(matrix: &Vec<usize>) -> bool {
     let mut inversions = 0;
-    // println!("matrix: ");
-    // println!("{:?}", matrix);
     for i in 0..matrix.len() {
         for j in i..matrix.len() {
             if matrix[i] > matrix[j as usize] {
-                // println!("inversions: {} {}", matrix[i], matrix[j as usize]);
                 inversions += 1;
             }
         }
@@ -99,30 +82,19 @@ pub fn check_solution(matrix: &Vec<Vec<usize>>) -> bool {
             }
         }
     }
-    // println!("before indexing");
-    // println!("{:?}", line_matrix);
 
     for i in 0..line_matrix.len() {
         for j in 0..line_goal.len() {
             if line_matrix[i] == line_goal[j] {
-                // if (j + 1) == line_goal.len() {
-                //     line_matrix[i] = 0;
-                //     break;
-                // }
                 line_matrix[i] = (j + 1) as usize;
                 break;
             }
         }
     }
     if is_solvable(&line_matrix) == false {
-        println!("no solution: {:?}", line_matrix);
-        println!("false exitiing");
-        exit(9);
+        println!("The input has not a valid solution. Exiting.");
+        exit(1);
     }
-    // println!("after indexing");
-    // println!("{:?}", line_matrix);
-    // println!("goal as line:");
-    // println!("{:?}", line_goal);
     true
 }
 

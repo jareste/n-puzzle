@@ -38,25 +38,23 @@ fn get_file_contents(file: &str) -> String {
     contents
 }
 
-pub fn check_args() -> (String, String, String, i16) {
+pub fn check_args() -> (String, String, String, i16, String) {
     let mut file = String::new();
     let mut filefound: bool = false;
     let mut method: String = "normal".to_string();
     let mut methodfound: bool = false;
     let mut heuristic: String = "manhattan".to_string();
     let mut heuristicfound: bool = false;
+    let mut algorithm: String = "ida_star".to_string();
+    let mut algorithmfound: bool = false;
     let mut o_value: i16 = -1;
     let args: Vec<String> = env::args().collect();
     let mut i = 1;
-    // println!("{:?}", args);
-    // println!("{}", file);
     while i < args.len() {
-        // println!("{}, {}, {}", args[i], i, args.len());
         if args[i] == "-f" || args[i] == "--file" {
             if i + 1 < args.len()  && filefound == false {
                 filefound = true;
                 file = get_file_contents(&args[i + 1]);
-                // println!("file content:\n{}", file);
             } else {
                 println!("File flag detected but no argument following it. Exiting.");
                 exit(1);
@@ -66,14 +64,13 @@ pub fn check_args() -> (String, String, String, i16) {
             if i + 1 < args.len() && filefound == false  && args[i + 1].parse::<i8>().is_ok() {
                 file = run_python_program(&args[i + 1]);
                 filefound = true;
-                // println!("Python output:\n{}", file);
             } else {
                 println!("File flag detected but no integer argument following it. Exiting.");
                 exit(1);
             }
         }
         else if args[i] == "-he" || args[i] == "--heuristic" {
-            if i + 1 < args.len() && heuristicfound == false && (args[i + 1] == "manhattan" || args[i + 1] == "hamming" || args[i + 1] == "euclidean") {
+            if i + 1 < args.len() && heuristicfound == false && (args[i + 1] == "manhattan" || args[i + 1] == "hamming" || args[i + 1] == "euclidean" || args[i + 1] == "linear_conflicts" || args[i + 1] == "NoAdmisible") {
                 heuristicfound = true;
                 heuristic = args[i + 1].clone();
             } else {
@@ -82,7 +79,7 @@ pub fn check_args() -> (String, String, String, i16) {
             }
         }
         else if args[i] == "-m" || args[i] == "--method" {
-            if i + 1 < args.len() && methodfound == false && (args[i + 1] == "greedy" || args[i + 1] == "uniform")  {
+            if i + 1 < args.len() && methodfound == false && (args[i + 1] == "greedy" || args[i + 1] == "uniform" || args[i + 1] == "normal")  {
                 methodfound = true;
                 method = args[i + 1].clone();
             } else {
@@ -92,19 +89,22 @@ pub fn check_args() -> (String, String, String, i16) {
 
         }
         else if args[i] == "-o" || args[i] == "--override"{
-            if i + 1 < args.len() && o_value == -1 && (args[i + 1].parse::<i16>().is_ok()) {
-                o_value = args[i + 1].parse::<i16>().unwrap();
-                if o_value < 0 {
-                    println!("Override flag detected but no positive integer argument following it. Exiting.");
-                    exit(1);
-                }
-            } else if o_value != -1 {
+            if o_value != -1 {
                 println!("Override flag detected more than once. Exiting.");
             }
             else {
                 o_value = -2;
                 i+=1;
                 continue;
+            }
+        }
+        else if args[i] == "-a" || args[i] == "--algorithm" {
+            if i + 1 < args.len() && (args[i + 1] == "a_star" || args[i + 1] == "ida_star") && algorithmfound == false {
+                algorithmfound = true;
+                algorithm = args[i + 1].clone();
+            } else {
+                println!("Algorithm flag detected but no argument following it. Exiting.");
+                exit(1);
             }
         }
         else if i == 1 && (args[i] == "-h" || args[i] == "--help") {
@@ -124,7 +124,8 @@ pub fn check_args() -> (String, String, String, i16) {
             euclidean: sum of the squares of the distances of the tiles to their goal positions.
             linear_conflicts: sum of the manhattan distances and the number of conflicts.
             NoAdmisible: twice the manhattan distance.\n
-            [-o | --override] [maximum number of moviments to be checked.]
+            [-o | --override] 
+            This flag allows the execution of 5 or higher puzzle sizes.\n
             By defaut, the program will run with the following parameters: ida_star, normal, manhattan.
             Also, for protecting computer resources, the program will not allow higher than 4x4 puzzles without specifying the maximum number of movements to check (-o).");
             exit(1);
@@ -143,7 +144,6 @@ pub fn check_args() -> (String, String, String, i16) {
         println!("No file or generation flag detected. Exiting. Run \"Cargo run -- -h\" for more info.");
         exit(1);
     }
-    println!("o_value: {}", o_value);
     // println!("file: {}, method: {}, heuristic: {}", file, method, heuristic);
-    return (file, method, heuristic, o_value);
+    return (file, method, heuristic, o_value, algorithm);
 }
