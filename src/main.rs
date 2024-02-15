@@ -45,9 +45,9 @@ fn main() {
             //     size: matrix[0].len(),
             // };
             let goal = generate_goal(map.size as usize);
-            println!("Method: {}", method);
-            println!("goal0: {} {}", goal.x, goal.y);
-            solver(&heuristic, &"ida_star",&method, &map, &goal, usize::MAX);
+            // println!("Method: {}", method);
+            // println!("goal0: {} {}", goal.x, goal.y);
+            solver(&heuristic, &"a_star",&method, &map, &goal, usize::MAX);
         }
 
     }

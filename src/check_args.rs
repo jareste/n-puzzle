@@ -4,7 +4,7 @@ use std::str;
 use std::fs;
 
 fn run_python_program(num: &str) -> String {
-    let output = Command::new("python2.7")
+    let output = Command::new("python")
         .arg("npuzzle-gen.py")
         .arg(num)
         .output();
@@ -108,11 +108,25 @@ pub fn check_args() -> (String, String, String, i16) {
             }
         }
         else if i == 1 && (args[i] == "-h" || args[i] == "--help") {
-            println!("Usage: cargo run -- -f | -g | -m | -he\n
-            [-f | --file] [file]\n
+            println!("Usage: cargo run -- [-f FILENAME] [-g SIZE] [-a ALGORITHM] [-m METHOD] [-he HEURISTIC] [-o MOVEMENTS]\n
+            [-f | --file] [filename]\n
             [-g | --generate] [size]\n
-            [-m | --method] [method]\n
-            [-he | --heuristic] [heuristic]");
+            [-a | --algorithm] [a_star | ida_star]
+            a_star: Faster algorithm but requires more memory and may lead to a notable slowness of the computer.
+            ida_star: Slower algorithm based on astar that does not requires that much memory but takes longer time to get the solution.\n
+            [-m | --method] [normal | greedy | uniform]
+            normal: knows the previous steps and the cost of the path.
+            greedy: only knows the cost of the path.
+            uniform: only knows the previous steps.\n
+            [-he | --heuristic]
+            manhattan: sum of the distances of the tiles to their goal positions.
+            hamming: number of tiles in the wrong position.
+            euclidean: sum of the squares of the distances of the tiles to their goal positions.
+            linear_conflicts: sum of the manhattan distances and the number of conflicts.
+            NoAdmisible: twice the manhattan distance.\n
+            [-o | --override] [maximum number of moviments to be checked.]
+            By defaut, the program will run with the following parameters: ida_star, normal, manhattan.
+            Also, for protecting computer resources, the program will not allow higher than 4x4 puzzles without specifying the maximum number of movements to check (-o).");
             exit(1);
         }
         else {

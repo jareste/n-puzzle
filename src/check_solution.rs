@@ -99,8 +99,8 @@ pub fn check_solution(matrix: &Vec<Vec<usize>>) -> bool {
             }
         }
     }
-    println!("before indexing");
-    println!("{:?}", line_matrix);
+    // println!("before indexing");
+    // println!("{:?}", line_matrix);
 
     for i in 0..line_matrix.len() {
         for j in 0..line_goal.len() {
@@ -119,10 +119,10 @@ pub fn check_solution(matrix: &Vec<Vec<usize>>) -> bool {
         println!("false exitiing");
         exit(9);
     }
-    println!("after indexing");
-    println!("{:?}", line_matrix);
-    println!("goal as line:");
-    println!("{:?}", line_goal);
+    // println!("after indexing");
+    // println!("{:?}", line_matrix);
+    // println!("goal as line:");
+    // println!("{:?}", line_goal);
     true
 }
 

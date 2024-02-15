@@ -35,6 +35,7 @@ pub fn ida_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method:
 }
 
 fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &solver::Heuristic, h_method: &solver::HMethod, time_c: &mut usize, space_c: &mut usize) -> Path {
+    // println!("llego");
     let node = path.last().unwrap();
     *time_c += 1;
     if (path.len() as usize) > *space_c {
@@ -42,10 +43,11 @@ fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &
     }
 
     let h = match heuristic{
-        solver::Heuristic::Manhattan => node.manhattan_dist(goal),
+        solver::Heuristic::Manhattan => node.manhattan_dist(goal) * 2,
         solver::Heuristic::Hamming => node.hamming_dist(goal),
         solver::Heuristic::Euclidean => node.euclidean_dist(goal),
         solver::Heuristic::LinearConflicts => node.manhattan_linear_conflicts(goal),
+        &solver::Heuristic::NoAdmisible => node.manhattan_dist(goal) * 2,
     };
 
     let f = match h_method{
@@ -73,8 +75,8 @@ fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &
             path.pop();
         }
     }
-    if min == usize::MAX {
-        return Path::Impossible;
-    }
+    // if min == usize::MAX {
+    //     return Path::Impossible;
+    // }
     Path::Minimum(min)
 }

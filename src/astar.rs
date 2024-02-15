@@ -29,6 +29,8 @@ pub fn a_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: s
         solver::Heuristic::Hamming => start.hamming_dist(goal),
         solver::Heuristic::Euclidean => start.euclidean_dist(goal),
         solver::Heuristic::LinearConflicts => start.manhattan_linear_conflicts(goal),
+        solver::Heuristic::NoAdmisible => start.manhattan_dist(goal) * 2,
+
     };
 
     node_info.insert(start.clone(), Node {
@@ -69,6 +71,7 @@ pub fn a_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: s
                 solver::Heuristic::Hamming => neighbor.hamming_dist(goal),
                 solver::Heuristic::Euclidean => neighbor.euclidean_dist(goal),
                 solver::Heuristic::LinearConflicts => neighbor.manhattan_linear_conflicts(goal),
+                solver::Heuristic::NoAdmisible => neighbor.manhattan_dist(goal) * 2,
             };
 
             let new_f = match h_method{

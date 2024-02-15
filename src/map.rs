@@ -30,7 +30,7 @@ impl Map {
                         for j in 0..self.size {
                             let aux = goal.matrix[i][j];
                             GOAL_VEC[aux as usize] = (i, j);
-                            println!("{:?} ", GOAL_VEC[aux as usize])
+                            // println!("{:?} ", GOAL_VEC[aux as usize])
                         }
                     }
                 }
@@ -39,6 +39,7 @@ impl Map {
         }
     }
 
+    
     pub fn manhattan_dist(&self, other: &Map) -> u32 {
         //println!("{:?}", self.matrix);
         let mut dist = 0;

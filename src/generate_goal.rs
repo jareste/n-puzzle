@@ -34,9 +34,9 @@ pub fn generate_goal(size: usize) -> Map {
 
     map.matrix[map.x as usize][map.y as usize] = 0;
 
-    println!("Goal:");
-    for i in 0..size {
-        println!("{:?}", map.matrix[i]);
-    }
+    // println!("Goal:");
+    // for i in 0..size {
+    //     println!("{:?}", map.matrix[i]);
+    // }
     map
 }

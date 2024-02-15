@@ -12,6 +12,7 @@ pub enum Heuristic {
     Hamming,
     Euclidean,
     LinearConflicts,
+    NoAdmisible
 }
 
 pub enum HMethod {
@@ -26,6 +27,7 @@ fn str_to_heuristic(heuristic: &str) -> Heuristic {
         "hamming" => Heuristic::Hamming,
         "euclidean" => Heuristic::Euclidean,
         "linear_conflicts" => Heuristic::LinearConflicts,
+        "NoAdmisible" => Heuristic::NoAdmisible,
         _ => panic!("Invalid heuristic"),
     }
 }
@@ -63,6 +65,17 @@ fn print_sol(sol: Option<(Vec<Map>, usize, usize, usize)>, time_elapsed: f64){
 }
 
 pub fn solver(heuristic: &str,algorithm: &str, h_method: &str,start: &Map, goal: &Map, max_p: usize){
+    println!("start:");
+    for i in 0..start.matrix[0].len() {
+        println!("{:?}", start.matrix[i]);
+    }
+    println!("start00: {} ", start.matrix[start.x as usize][start.y as usize]);
+    println!("GOAL:");
+    for i in 0..goal.matrix[0].len() {
+        println!("{:?}", goal.matrix[i]);
+    }
+    println!("GOAL00: {} ", goal.matrix[goal.x as usize][goal.y as usize]);
+
     if algorithm == "default"{
         let result = idastar(start, |m| m.successors(), |m| m.manhattan_dist(goal),|m| *m == *goal);
         println!("Result: {:?}", result);
