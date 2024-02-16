@@ -4,7 +4,7 @@ Usage: cargo run -- [-f FILENAME] [-g SIZE] [-a ALGORITHM] [-m METHOD] [-he HEUR
 
     - [-f | --file] [filename]
 
-    - [-g | --generate] [size]
+    - [-g | --generate] [size] *
 
     - [-a | --algorithm] [a_star | ida_star]
         a_star: Faster algorithm but requires more memory and may lead to a notable slowness of the computer.
@@ -27,3 +27,5 @@ Usage: cargo run -- [-f FILENAME] [-g SIZE] [-a ALGORITHM] [-m METHOD] [-he HEUR
 
     By defaut, the program will run with the following parameters: ida_star, normal, manhattan.
     Also, for protecting computer resources, the program will not allow higher than 4x4 puzzles without specifying the maximum number of movements to check (-o).
+
+    *If you want to generate only-solvable puzzles go to npuzzle-gen.py and modify line 81 for a true: solv = True

@@ -74,7 +74,7 @@ pub fn check_args() -> (String, String, String, i16, String) {
                 heuristicfound = true;
                 heuristic = args[i + 1].clone();
             } else {
-                println!("File flag detected but no argument following it. Exiting.");
+                println!("Heuristic flag detected but no argument following it. Exiting.");
                 exit(1);
             }
         }

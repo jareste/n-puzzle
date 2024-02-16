@@ -1,7 +1,9 @@
 use crate::map::Map;
+use std::process::exit;
+
 
 #[derive(Debug)]
-pub enum ParserError {//hacer un enum que devulva parser o error
+pub enum ParserError {
     FileNotReadable,
     SizeTooLarge,
     InvalidFormat,
@@ -15,11 +17,10 @@ fn find_zero(matrix: &Vec<Vec<usize>>) -> (isize, isize) {
             }
         }
     }
-    panic!("Value not found in matrix");
+    println!("Value not found in matrix. Exiting.");
+    exit(1);
 }
-
 pub fn parse_file(contents: String) -> Result<Map, ParserError> {
-
     let mut lines = contents.lines();
 
     let mut first_line = match lines.next() {
@@ -29,8 +30,7 @@ pub fn parse_file(contents: String) -> Result<Map, ParserError> {
             return Err(ParserError::FileNotReadable)},
     };
 
-    if first_line == "# This puzzle is solvable" || first_line == "# This puzzle is unsolvable" {
-        println!("{}", first_line);
+    if first_line.starts_with("#") {
         first_line = match lines.next() {
             Some(line) => line,
             None => {
@@ -39,9 +39,7 @@ pub fn parse_file(contents: String) -> Result<Map, ParserError> {
         };
     }
 
-    
-
-    let size: usize = match first_line.trim().parse() {
+    let size: usize = match first_line.split('#').next().unwrap().trim().parse() {
         Ok(num) => num,
         Err(_) => return Err(ParserError::FileNotReadable),
     };
@@ -59,6 +57,7 @@ pub fn parse_file(contents: String) -> Result<Map, ParserError> {
     
     let mut row = 0;
     for line in lines {
+        let line = line.split('#').next().unwrap(); // Ignore everything after #
         let numbers: Vec<&str> = line.split_whitespace().collect();
         if numbers.len() != size {
             return Err(ParserError::InvalidFormat);
@@ -68,6 +67,10 @@ pub fn parse_file(contents: String) -> Result<Map, ParserError> {
         for num_str in numbers {
             match num_str.parse::<usize>() {
                 Ok(num) => {
+                    if num > size * size {
+                        println!("Number {} too large for matrix size.", num);
+                        exit(1);
+                    }
                     map.matrix[row][col] = num;
                     col += 1;
                 }

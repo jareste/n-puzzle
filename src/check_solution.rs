@@ -48,7 +48,6 @@ fn is_solvable(matrix: &Vec<usize>) -> bool {
             }
         }
     }
-
     if inversions % 2 == 0 {
         return true;
     }
