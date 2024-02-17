@@ -10,7 +10,13 @@ enum Path {
 
 pub fn ida_star(start: &Map, goal: &Map, heuristic: solver::Heuristic, h_method: solver::HMethod, max_p: &usize) -> Option<(Vec<Map>, usize, usize, usize)> {
 
-    let mut bound = start.manhattan_dist(goal) as usize;
+    let mut bound =match heuristic{
+        solver::Heuristic::Manhattan => start.manhattan_dist(goal) as usize,
+        solver::Heuristic::Hamming => start.hamming_dist(goal) as usize,
+        solver::Heuristic::Euclidean => start.euclidean_dist(goal) as usize,
+        solver::Heuristic::LinearConflicts => start.manhattan_linear_conflicts(goal) as usize,
+        solver::Heuristic::NoAdmisible => (start.manhattan_dist(goal) * start.manhattan_dist(goal)) as usize,
+    };
     let mut path = vec![start.clone()];
 
     let mut time_c: usize = 0;
@@ -47,7 +53,7 @@ fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &
         solver::Heuristic::Hamming => node.hamming_dist(goal),
         solver::Heuristic::Euclidean => node.euclidean_dist(goal),
         solver::Heuristic::LinearConflicts => node.manhattan_linear_conflicts(goal),
-        &solver::Heuristic::NoAdmisible => node.manhattan_dist(goal) * 2,
+        solver::Heuristic::NoAdmisible => node.manhattan_dist(goal) * node.manhattan_dist(goal),
     };
 
     let f = match h_method{
