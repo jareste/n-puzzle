@@ -49,7 +49,7 @@ fn search(path: & mut Vec<Map>, g: usize, bound: usize, goal: &Map, heuristic: &
     }
 
     let h = match heuristic{
-        solver::Heuristic::Manhattan => node.manhattan_dist(goal) * 2,
+        solver::Heuristic::Manhattan => node.manhattan_dist(goal),
         solver::Heuristic::Hamming => node.hamming_dist(goal),
         solver::Heuristic::Euclidean => node.euclidean_dist(goal),
         solver::Heuristic::LinearConflicts => node.manhattan_linear_conflicts(goal),
