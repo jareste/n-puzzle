@@ -46,6 +46,10 @@ fn is_solvable(matrix: &Vec<usize>) -> bool {
             if matrix[i] > matrix[j as usize] {
                 inversions += 1;
             }
+            if matrix[i] == matrix[j as usize] && i != j{
+                println!("Found two equal numbers in the input. Exiting.");
+                exit(1);
+            }
         }
     }
     if inversions % 2 == 0 {
